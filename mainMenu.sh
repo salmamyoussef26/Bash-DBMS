@@ -107,6 +107,7 @@ function list_DBConnection_functions(){
             
         ;;
         "Create tables" )
+            source ~/Documents/Bash/project/DBMS/create_table.sh
         ;;
         "Drop tables" )
         ;;
