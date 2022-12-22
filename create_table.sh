@@ -33,14 +33,18 @@ read -p "Enter the number of columns" num_of_columns
 
 declare -a columns
 echo "columns information: name, datatype, constraint "
-for ((i=0; i<3; i++))
+for ((i=0; i<num_of_columns; i++))
 do
-    for ((j=0; j<num_of_columns; j++))
+    echo $i
+    for ((j=0; j<3; j++))
     do
         read columns[$i,$j]
-        echo -n ${columns[$i,$j]}":" >>`pwd`/"$table_name metadata"
+        echo -n ${columns[$i,$j]} >>`pwd`/"$table_name metadata"
+        if [[ $j < 3 ]]; then
+            echo -n  ":" >>`pwd`/"$table_name metadata"
+        fi
     done
-
-    echo -e "\n" >> `pwd`/"$table_name metadata"
+    
+    echo -n -e "\n"  >> `pwd`/"$table_name metadata"
 done
 
