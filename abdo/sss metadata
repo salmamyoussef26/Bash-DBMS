@@ -1,0 +1,6 @@
+id:int:pk 
+
+name:string:no 
+
+age:int:no
+

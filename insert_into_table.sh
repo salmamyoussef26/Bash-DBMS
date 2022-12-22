@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 
 
@@ -20,16 +20,17 @@ function auto_incremented_field(){
 
 function insert_records(){
     
-    for((i=0; i<num_of_columns-1; i++))
+    for((i=0; i<num_of_columns; i++))
     do
         read -p "enter the column name: " column_name
-        isFound=$(grep -Fxq $column_name "$table_name metadata")
+        isFound=$(grep $column_name "$table_name metadata")
         if [[ $column_name == +([a-zA-Z0-9_-]) ]] && [[ $column_name == [a-zA-Z]* ]];then
-            if [[ $isFound == 0 ]];then
-                read "enter the value for $column_name " column_value
-                make_dictionary
-                check_column_dataType
-                dictionary[${columns_name[$i]}]=${columns_datatype[$i]}
+            if [[ $isFound ]];then
+                read -p "enter the value for $column_name " column_value
+                
+                insert_record
+                #check_column_dataType
+                #dictionary[${columns_name[$i]}]=${columns_datatype[$i]}
             else
                 echo "No column with such name"
             fi
@@ -42,23 +43,56 @@ function insert_records(){
 }
 
 #Make Dictionary
-function make_dictionary(){
+function insert_record(){
 
-    : '
-    1 arr for keys     -a
-    1 arr for values   -a
-    dic    -A [key]=[value]
-    '
-    declare -a column_names
-    declare -a columns_datatype
-    # myarr=($(ps -u kdride | awk '{ print $1 }'))
-    column_names=awk -F ':' ' print $1 ' "$table_name metadata"
-    columns_datatype=awk -F ':' ' print $2 ' "$table_name metadata"
+    # declare -a column_names
+    # declare -a columns_datatype
+    #declare -A columns
     
-    for((i=0; i<num_of_columns; i++))
+    IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
+    
+    for i in "${!lines[@]}"
     do
-        dictionary[${columns_name[$i]}]=${columns_datatype[$i]} 
+        IFS=':' read -r -a column <<< "${lines[i]}"
+        column_name=${column[0]}
+        column_datatype=${column[1]}
+        column_constraint=${column[2]}
+        
+        if [[ $column_datatype == "int" ]]; then
+            if [[ $column_value == '^[0-9]+$' ]]; then
+                echo $column_value > $table_name
+                echo "the value is stored successfully"
+            else
+                echo "it is not a number"
+                break
+            fi
+        elif [[ $column_datatype == "string" ]];then
+            if [[ $column_value == [a-zA-Z]* ]]; then
+                echo $column_value > $table_name
+                echo "the value is stored successfully"
+            else
+                echo "it is not a string"
+                break
+            fi
+        fi
+
     done
+    # while read -d ' ' -r column_name column_datatype
+    # do
+    #     dictionary[$column_name]=$column_datatype
+    # done < "$table_name metadata"
+
+    # for key in "${!dictionary[@]}"
+    # do
+    #     echo $key ":" ${dictionary[$key]}
+    # done
+    # column_names=$(awk -F : '  { print $1 } ' "$table_name metadata")
+    # columns_datatype=$(awk -F : '  { print $2 } ' "$table_name metadata")
+
+    # for((i=0; i<num_of_columns; i++))
+    # do
+    #     dictionary[${column_names[$i]}]=${columns_datatype[$i]} 
+    # done
 
     #print the dictionary
     # for key in "${!dictionary[@]}"
@@ -68,25 +102,24 @@ function make_dictionary(){
 
 }
 
-function check_column_dataType(){
-    : 'if it is numeric->value dic
-       if it is string -> regex, value dic
-       column_name and column_datatype golbal'
+# function validate_column_value(){
+#     : 'if it is numeric->value dic
+#        if it is string -> regex, value dic
+#        column_name and column_datatype golbal'
 
     
-    if [[ $column_value =~ '^[0-9]+$' ]];then
-       isNum=1
+#     if [[ $column_value =~ '^[0-9]+$' ]];then
+#        isNum="int"
 
-    elif [[ $column_value == [a-zA-Z]* ]];then
-        isString=1
+#     elif [[ $column_value == [a-zA-Z]* ]];then
+#         isString="string"
 
-    else
-        echo "error it is not int neither string"
-    fi
-}
+#     else
+#         echo "error it is not int neither string"
+#     fi
+# }
 
-declare -i num_of_columns
-declare -A dictionary
+#declare -i num_of_columns
 declare -i isNum=0
 declare -i isString=0
 while true
@@ -96,7 +129,7 @@ while true
         if [ -e $table_name ] ; then 
             
             echo "correct name and the table exists"
-            num_of_columns=$(head -1 "$table_name metadata"| wc -w)
+            num_of_columns=$(awk -F':' '{print NF}' "$table_name metadata" | sort -nu | tail -n 1)
             auto_incremented_field
             insert_records
             break
