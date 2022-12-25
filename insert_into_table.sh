@@ -44,41 +44,41 @@ function insert_record(){
 }
 
 
-function make_nameTypes_nameConstraints_dictionaries(){
+    function make_nameTypes_nameConstraints_dictionaries(){
 
 
-    
-    IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
-    
-    for i in "${!lines[@]}"
-    do
-        IFS=':' read -r -a column <<< "${lines[i]}"
-        col_names[$i]=${column[0]}
-        col_types[$i]=${column[1]}
-        col_constraints[$i]=${column[2]}
-    done
-
-        for ((i=0; i<num_of_columns; i++))
+        
+        IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
+        
+        for i in "${!lines[@]}"
         do
-            name_type[${col_names[$i]}]=${col_types[$i]} 
+            IFS=':' read -r -a column <<< "${lines[i]}"
+            col_names[$i]=${column[0]}
+            col_types[$i]=${column[1]}
+            col_constraints[$i]=${column[2]}
         done
 
-        for ((i=0; i<num_of_columns; i++))
-        do
-            name_constraint[${col_names[$i]}]=${col_constraints[$i]} 
-        done
+            for ((i=0; i<num_of_columns; i++))
+            do
+                name_type[${col_names[$i]}]=${col_types[$i]} 
+            done
 
-    # for key in "${!name_type[@]}"
-    # do
-    #     echo $key ":" ${name_type[$key]}
-    # done
+            for ((i=0; i<num_of_columns; i++))
+            do
+                name_constraint[${col_names[$i]}]=${col_constraints[$i]} 
+            done
 
-    # echo "***************************"
-    # for key in "${!name_constraint[@]}"
-    # do
-    #     echo $key ":" ${name_constraint[$key]}
-    # done
-}
+        # for key in "${!name_type[@]}"
+        # do
+        #     echo $key ":" ${name_type[$key]}
+        # done
+
+        # echo "***************************"
+        # for key in "${!name_constraint[@]}"
+        # do
+        #     echo $key ":" ${name_constraint[$key]}
+        # done
+    }
 
 
 
