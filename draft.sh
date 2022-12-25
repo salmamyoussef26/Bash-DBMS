@@ -168,44 +168,52 @@
 #     # do something
 # done
 
-declare -a col_names
-declare -a col_types
-declare -a col_constraints
-declare -A name_type
-declare -A name_constraint
+# declare -a col_names
+# declare -a col_types
+# declare -a col_constraints
+# declare -A name_type
+# declare -A name_constraint
 
-IFS=$'\n' read -d '' -r -a lines < ~/Desktop/dic.txt
+# IFS=$'\n' read -d '' -r -a lines < ~/Desktop/dic.txt
     
-    for i in "${!lines[@]}"
-    do
-        IFS=':' read -r -a column <<< "${lines[i]}"
-        col_names[$i]=${column[0]}
-        col_types[$i]=${column[1]}
-        col_constraints[$i]=${column[2]}
-    done
+#     for i in "${!lines[@]}"
+#     do
+#         IFS=':' read -r -a column <<< "${lines[i]}"
+#         col_names[$i]=${column[0]}
+#         col_types[$i]=${column[1]}
+#         col_constraints[$i]=${column[2]}
+#     done
 
-    # for((i=0; i<3; i++))
-    # do
-    #     echo ${col_names[$i]} "*"
-    # done
+#     # for((i=0; i<3; i++))
+#     # do
+#     #     echo ${col_names[$i]} "*"
+#     # done
 
-    for((i=0; i<3; i++))
-    do
-        name_type[${col_names[$i]}]=${col_types[$i]} 
-    done
+#     for((i=0; i<3; i++))
+#     do
+#         name_type[${col_names[$i]}]=${col_types[$i]} 
+#     done
 
-    for((i=0; i<3; i++))
-    do
-        name_constraint[${col_names[$i]}]=${col_constraints[$i]} 
-    done
+#     for((i=0; i<3; i++))
+#     do
+#         name_constraint[${col_names[$i]}]=${col_constraints[$i]} 
+#     done
 
-    for key in "${!name_type[@]}"
-    do
-        echo $key ":" ${name_type[$key]}
-    done
+#     for key in "${!name_type[@]}"
+#     do
+#         echo $key ":" ${name_type[$key]}
+#     done
 
-    echo "***************************"
-    for key in "${!name_constraint[@]}"
-    do
-        echo $key ":" ${col_constraints[$key]}
-    done
+#     echo "***************************"
+#     for key in "${!name_constraint[@]}"
+#     do
+#         echo $key ":" ${col_constraints[$key]}
+#     done
+
+read -p "enter the column name to be updated " column_name
+read -p "the new value for the column" new_column_value
+ awk -F : -v col_index="${name_order[$column_name]}" new_value="$new_column_value"  ' 
+{
+    $col_index=new_value
+    print "inside awk"
+} ' ~/Documents/Bash-DBMS/abdo/tests 

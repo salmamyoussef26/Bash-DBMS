@@ -38,7 +38,7 @@ function DB_Creation(){
                     #continue
                 else
                     echo "correct name"
-                    mkdir ~/Desktop/Bash-DBMS/$name
+                    mkdir ~/Documents/Bash-DBMS/$name
                     break
                 fi 
             else
@@ -54,7 +54,7 @@ function DB_Connection(){
                 read -p "Enter Name of DB " name 
                 if [[ $name == +([a-zA-Z0-9_-]) ]] && [[ $name == [a-zA-Z]* ]];then
                     if [ -d $name ] ; then 
-                        cd ~/Desktop/Bash-DBMS/$name
+                        cd ~/Documents/Bash-DBMS/$name
                         echo "you're at " `pwd`
                         list_DBConnection_functions
                         break
@@ -83,7 +83,7 @@ function DB_Drop(){
             read -p "Enter Name of DB  to:" name
             if [[ $name == +([a-zA-Z0-9_-]) ]] && [[ $name == [a-zA-Z]* ]];then 
                 if [ -e $name ];then 
-                    rm -r ~/Desktop/Bash-DBMS/$name
+                    rm -r ~/Documents/Bash-DBMS/$name
                     echo "the database was removed"
                     break
                 else
@@ -105,16 +105,17 @@ function list_DBConnection_functions(){
             
         ;;
         "Create tables" )
-            source ~/Desktop/Bash-DBMS/create_table.sh
+            source ~/Documents/Bash-DBMS/create_table.sh
         ;;
         "Drop tables" )
         ;;
         "Insert tables" )
-            source ~/Desktop/Bash-DBMS/insert_into_table.sh
+            source ~/Documents/Bash-DBMS/insert_into_table.sh
         ;;
         "Select from table" )
         ;;
         "Update table" )
+            source ~/Documents/Bash-DBMS/update_table.sh
         ;;
         "Delete from table" )
         ;;
