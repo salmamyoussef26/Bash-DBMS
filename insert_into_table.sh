@@ -44,41 +44,41 @@ function insert_record(){
 }
 
 
-    function make_nameTypes_nameConstraints_dictionaries(){
+function make_nameTypes_nameConstraints_dictionaries(){
 
 
-        
-        IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
-        
-        for i in "${!lines[@]}"
+    
+    IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
+    
+    for i in "${!lines[@]}"
+    do
+        IFS=':' read -r -a column <<< "${lines[i]}"
+        col_names[$i]=${column[0]}
+        col_types[$i]=${column[1]}
+        col_constraints[$i]=${column[2]}
+    done
+
+        for ((i=0; i<num_of_columns; i++))
         do
-            IFS=':' read -r -a column <<< "${lines[i]}"
-            col_names[$i]=${column[0]}
-            col_types[$i]=${column[1]}
-            col_constraints[$i]=${column[2]}
+            name_type[${col_names[$i]}]=${col_types[$i]} 
         done
 
-            for ((i=0; i<num_of_columns; i++))
-            do
-                name_type[${col_names[$i]}]=${col_types[$i]} 
-            done
+        for ((i=0; i<num_of_columns; i++))
+        do
+            name_constraint[${col_names[$i]}]=${col_constraints[$i]} 
+        done
 
-            for ((i=0; i<num_of_columns; i++))
-            do
-                name_constraint[${col_names[$i]}]=${col_constraints[$i]} 
-            done
+    # for key in "${!name_type[@]}"
+    # do
+    #     echo $key ":" ${name_type[$key]}
+    # done
 
-        # for key in "${!name_type[@]}"
-        # do
-        #     echo $key ":" ${name_type[$key]}
-        # done
-
-        # echo "***************************"
-        # for key in "${!name_constraint[@]}"
-        # do
-        #     echo $key ":" ${name_constraint[$key]}
-        # done
-    }
+    # echo "***************************"
+    # for key in "${!name_constraint[@]}"
+    # do
+    #     echo $key ":" ${name_constraint[$key]}
+    # done
+}
 
 
 
@@ -90,48 +90,48 @@ function validate_values(){
 #     # declare -a column_names
 #     # declare -a columns_datatype
 #     #declare -A columns
-    
+
 #     isNum=0
 #     isString=0
 
 #     IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
-    
+
 #     for i in "${!lines[@]}"
 #     do
 #         IFS=':' read -r -a column <<< "${lines[i]}"
 #         column_name=${column[0]}
 #         column_datatype=${column[1]}
 #         column_constraint=${column[2]}
-        
-        isNum=1
-        isString=
-        datatypes_not_matched=0
+    
+    isNum=1
+    isString=
+    datatypes_not_matched=0
 
-        read -p "Enter a value for $column_name: " column_value
-        if [[ datatypes_not_matched=0 ]] && [[ ${name_type[$column_name]} == "int" ]]; then
-            if  [[ $column_value =~ ^[0-9]+$ ]]; then
-                echo -n "$column_value"":">> $table_name
-                echo "the value is stored successfully"
-                
-            else
-                isNum=0
-                
-            fi
+    read -p "Enter a value for $column_name: " column_value
+    if [[ datatypes_not_matched=0 ]] && [[ ${name_type[$column_name]} == "int" ]]; then
+        if  [[ $column_value =~ ^[0-9]+$ ]]; then
+            echo -n "$column_value"":">> $table_name
+            echo "the value is stored successfully"
+            
         else
-            datatypes_not_matched=1
+            isNum=0
+            
         fi
-        #-------------------------------------------------
-        if [[ datatypes_not_matched=1 ]] && [[ ${name_type[$column_name]} == "string" ]];then
-            if [[ $column_value == [a-zA-Z]* ]]; then
-                echo -n "$column_value"":" >> $table_name
-                echo "the value is stored successfully"
-                
-            else
-                isString=0
-            fi
+    else
+        datatypes_not_matched=1
+    fi
+    #-------------------------------------------------
+    if [[ datatypes_not_matched=1 ]] && [[ ${name_type[$column_name]} == "string" ]];then
+        if [[ $column_value == [a-zA-Z]* ]]; then
+            echo -n "$column_value"":" >> $table_name
+            echo "the value is stored successfully"
+            
         else
-            datatypes_not_matched=1
+            isString=0
         fi
+    else
+        datatypes_not_matched=1
+    fi
 }      #-------------------------------------
 
 
