@@ -210,10 +210,10 @@
 #         echo $key ":" ${col_constraints[$key]}
 #     done
 
-read -p "enter the column name to be updated " column_name
-read -p "the new value for the column" new_column_value
- awk -F : -v col_index="${name_order[$column_name]}" new_value="$new_column_value"  ' 
-{
-    $col_index=new_value
-    print "inside awk"
-} ' ~/Documents/Bash-DBMS/abdo/tests 
+# read -p "enter the column name to be updated " column_name
+# read -p "the new value for the column" new_column_value
+#  awk -F : -v col_index="${name_order[$column_name]}" new_value="$new_column_value"  ' 
+# {
+#     $col_index=new_value
+#     print "inside awk"
+# } ' ~/Documents/Bash-DBMS/abdo/tests 

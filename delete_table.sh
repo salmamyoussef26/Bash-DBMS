@@ -1,3 +1,5 @@
+
+function main(){
 read -p "Enter table name to delete " table_name 
 if [[ $table_name == +([a-zA-Z0-9_-]) ]] && [[ $table_name == [a-zA-Z]* ]];then
     if [ -e $table_name ] ; then 
@@ -14,3 +16,6 @@ if [[ $table_name == +([a-zA-Z0-9_-]) ]] && [[ $table_name == [a-zA-Z]* ]];then
 else
         echo " Error in the table name "
 fi
+}
+
+main

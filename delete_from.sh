@@ -91,23 +91,26 @@ function delete_record(){
 
 
 
-
-while true
-    do
-    read -p "Enter table name to delete from: " table_name 
-    if [[ $table_name == +([a-zA-Z0-9_-]) ]] && [[ $table_name == [a-zA-Z]* ]];then
-        if [ -e $table_name ] ; then 
+function main(){
+    
+    while true
+        do
+        read -p "Enter table name to delete from: " table_name 
+        if [[ $table_name == +([a-zA-Z0-9_-]) ]] && [[ $table_name == [a-zA-Z]* ]];then
+            if [ -e $table_name ] ; then 
+                
+                echo "correct name and the table exists"
+                delete_from_table
+                break
             
-            echo "correct name and the table exists"
-            delete_from_table
-            break
-        
-        else 
-            echo "Sorry this table's not existed "
-            break
-        fi
+            else 
+                echo "Sorry this table's not existed "
+                break
+            fi
 
-    else
-            echo " Error in the table name "
-    fi
-done
+        else
+                echo " Error in the table name "
+        fi
+    done
+}
+main

@@ -2,26 +2,32 @@
 
 
    
-
+flag=0
 
 function auto_incremented_field(){
-    echo "the tables columns: "
-    head -1 "$table_name metadata" 
+
+    # echo "the tables columns: "
+    # head -1 "$table_name metadata" 
     unique_field=0
 
+    
     if [ -s $table_name ]; then
         unique_field=$(tail -1 $table_name| cut -d : -f 1)
         ((unique_field=$unique_field+1))
-        echo -n "$unique_field":"" >>$table_name
+        echo -n "$unique_field":"" >> $table_name
     else
         unique_field=1
-        echo -n "$unique_field":"">>$table_name
+        echo -n "$unique_field":"">> $table_name
     fi
 }
 
 
 function insert_record(){
-    
+
+    make_nameTypes_nameConstraints_dictionaries
+
+    auto_incremented_field
+
     echo $num_of_columns
     for((i=0; i<num_of_columns; i++))
     do
@@ -30,6 +36,14 @@ function insert_record(){
             isFound=$(grep $column_name "$table_name metadata")
             if [[ $isFound ]];then
                 validate_values
+                if [[ $flag == 1 ]]; then
+                    echo -n "$column_value"":">> $table_name
+                    echo "the value is stored successfully"
+                else
+                    echo "the data types are not matched"
+                    break
+                fi
+                
             else
                 echo "No column with such name"
             fi
@@ -83,74 +97,68 @@ function make_nameTypes_nameConstraints_dictionaries(){
 
 
 
-
-
 function validate_values(){
 
-#     # declare -a column_names
-#     # declare -a columns_datatype
-#     #declare -A columns
-
-#     isNum=0
-#     isString=0
-
-#     IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
-
-#     for i in "${!lines[@]}"
-#     do
-#         IFS=':' read -r -a column <<< "${lines[i]}"
-#         column_name=${column[0]}
-#         column_datatype=${column[1]}
-#         column_constraint=${column[2]}
     
-    isNum=1
-    isString=
-    datatypes_not_matched=0
-
     read -p "Enter a value for $column_name: " column_value
-    if [[ datatypes_not_matched=0 ]] && [[ ${name_type[$column_name]} == "int" ]]; then
+    if [[ ${name_type[$column_name]} == "int" ]]; then
         if  [[ $column_value =~ ^[0-9]+$ ]]; then
-            echo -n "$column_value"":">> $table_name
-            echo "the value is stored successfully"
+            flag=1
             
         else
-            isNum=0
-            
+            echo "it's not an integer"
+            flag=0
         fi
-    else
-        datatypes_not_matched=1
+    elif [[ ${name_type[$column_name]} == "string" ]];then
+        if [[ $column_value == [a-zA-Z]* ]]; then
+            flag=1
+        else
+            echo "it's not a string"
+            flag=0
+        fi
     fi
     #-------------------------------------------------
-    if [[ datatypes_not_matched=1 ]] && [[ ${name_type[$column_name]} == "string" ]];then
-        if [[ $column_value == [a-zA-Z]* ]]; then
-            echo -n "$column_value"":" >> $table_name
-            echo "the value is stored successfully"
-            
-        else
-            isString=0
-        fi
-    else
-        datatypes_not_matched=1
-    fi
-}      #-------------------------------------
+  
+    
+
+        #     # declare -a column_names
+    #     # declare -a columns_datatype
+    #     #declare -A columns
+
+    #     isNum=0
+    #     isString=0
+
+    #     IFS=$'\n' read -d '' -r -a lines < "$table_name metadata"
+
+    #     for i in "${!lines[@]}"
+    #     do
+    #         IFS=':' read -r -a column <<< "${lines[i]}"
+    #         column_name=${column[0]}
+    #         column_datatype=${column[1]}
+    #         column_constraint=${column[2]}
+
+}     
+
+ #-------------------------------------
 
 
-    declare -a col_names
-    declare -a col_types    
-    declare -a col_constraints
-    declare -A name_type
-    declare -A name_constraint
+declare -a col_names
+declare -a col_types    
+declare -a col_constraints
+declare -A name_type
+declare -A name_constraint
     #-------------------------------
+
+function main(){
+
     while true
     do
-    read -p "Enter table name to insert into " table_name 
+    read -p "Enter table name to insert into: " table_name 
     if [[ $table_name == +([a-zA-Z0-9_-]) ]] && [[ $table_name == [a-zA-Z]* ]];then
         if [ -e $table_name ] ; then 
             
             echo "correct name and the table exists"
             num_of_columns=$(wc -l "$table_name metadata" | cut -c1)
-            make_nameTypes_nameConstraints_dictionaries
-            auto_incremented_field
             insert_record
             break
         
@@ -163,3 +171,6 @@ function validate_values(){
             echo " Error in the table name "
     fi
     done
+}
+
+main

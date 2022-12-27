@@ -3,48 +3,54 @@
 #**********no repeated columns*********
 
 
-echo "Create table"
+echo "Create table: "
 
-while true
-do
-    read -p "enter the table name " table_name
-   if [[ $table_name == +([a-zA-Z0-9_-]) ]] && [[ $table_name == [a-zA-Z]* ]];then
-        if [ -e $table_name ]; then
-            echo "this table is already existed"
-            continue
+function main(){
+
+    while true
+    do
+        read -p "Enter the table name: " table_name
+    if [[ $table_name == +([a-zA-Z0-9_-]) ]] && [[ $table_name == [a-zA-Z]* ]];then
+            if [ -e $table_name ]; then
+                echo "This table is already existed."
+            else
+                echo "Correct name & the file was created."
+                touch ./$table_name
+                touch ./"$table_name metadata"
+                table_creation
+                break
+            fi
         else
-            echo "correct name & the file was created"
-            touch `pwd`/$table_name
-            touch `pwd`/"$table_name metadata"
-            break
-        fi
-    else
-        echo "error in naming the table please, try again "
-        
-   fi 
-done
+            echo "Error in naming the table please, try again. "
+            
+    fi 
+    done
+}
 #-------------------------
 
 
-declare -i num_of_columns
-#export -p num_of_columns
-read -p "Enter the number of columns" num_of_columns
+function table_creation(){
+    declare -i num_of_columns
 
+    read -p "Enter the number of columns: " num_of_columns
 
-declare -a columns
-echo "columns information: name, datatype, constraint "
-for ((i=0; i<num_of_columns; i++))
-do
-    echo $i
-    for ((j=0; j<3; j++))
+    declare -a columns
+    echo "columns information: (name, datatype) respectively: "
+    for ((i=0; i<num_of_columns; i++))
     do
-        read columns[$i,$j]
-        echo -n ${columns[$i,$j]} >>`pwd`/"$table_name metadata"
-        if [[ $j < 3 ]]; then
-            echo -n  ":" >>`pwd`/"$table_name metadata"
-        fi
+        for ((j=0; j<2; j++))
+        do
+            read -p "column # $(($i+1)): " columns[$i,$j]
+            if [[ ${columns[$i,$j]} == "id" ]]; then
+                echo "id is not allowed, it's auto incremented."
+                break
+            else
+                echo -n ${columns[$i,$j]}":" >> ./"$table_name metadata"
+            fi
+        done
+        
+        echo -n -e "\n"  >> ./"$table_name metadata"
     done
-    
-    echo -n -e "\n"  >> `pwd`/"$table_name metadata"
-done
+}
 
+main
