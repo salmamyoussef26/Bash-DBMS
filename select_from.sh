@@ -24,23 +24,26 @@ function make_colName_colID_dictionary(){
 function select_table(){
     make_colName_colID_dictionary
 
-    echo "Choose selection method: 
-        [a] for all
-        [s] for selection
-        [p] for projection " 
+    # echo "Choose selection method: 
+    #     [a] for all
+    #     [s] for selection
+    #     [p] for projection " 
 
-    select choice in "a" "s" "p"
+    select choice in "all" "selection" "projection"
     do
         case $choice in
-         "a" )
+         "all" )
          select_all
+         break
          ;;
-         "s" )
+         "selection" )
          selection
+         break
          ;;
 
-         "p" )
+         "projection" )
          projection
+         break
          ;;
          * )
             echo "Invalid answer please, enter [a/s/p]"  
@@ -65,9 +68,11 @@ function selection(){
         case $choice in
             "all" )
             selection_all
+            break
             ;;
             "specific columns" )
             selection_specific_columns
+            break
             ;;
 
             * )
@@ -220,3 +225,4 @@ function main(){
 }
 
 main
+list_DBConnection_functions

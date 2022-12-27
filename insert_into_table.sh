@@ -28,7 +28,6 @@ function insert_record(){
 
     auto_incremented_field
 
-    echo $num_of_columns
     for((i=0; i<num_of_columns; i++))
     do
         read -p "enter the column name: " column_name
@@ -174,3 +173,4 @@ function main(){
 }
 
 main
+list_DBConnection_functions

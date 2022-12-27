@@ -19,3 +19,4 @@ fi
 }
 
 main
+list_DBConnection_functions

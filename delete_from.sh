@@ -32,9 +32,11 @@ function delete_from_table(){
         case $choice in
          "for all" )
          delete_all
+         break
          ;;
          "for specific record" )
          delete_record
+         break
          ;;
          * )
             echo "Invalid answer please"  
@@ -114,3 +116,4 @@ function main(){
     done
 }
 main
+list_DBConnection_functions

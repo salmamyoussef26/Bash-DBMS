@@ -6,19 +6,21 @@ function update_table(){
 
     make_colName_colID_dictionary  
      
-    echo "Do you want to enter a condition to change specific record? 
-    [y/n] NOTE: no condition means the column value in all the records will be updated " 
+    # echo "Do you want to enter a condition to change specific record? 
+    # [y/n] NOTE: no condition means the column value in all the records will be updated " 
 
-    select choice in "y" "n"
+    select choice in "where condition" "no where condition"
     do
         case $choice in
-         "y" )
+         "where condition" )
          #code of where cond
          where_condition
+         break
          ;;
-         "n" )
+         "no where condition" )
          #code of column
          no_where_condition
+         break
          ;;
          * )
             echo "Invalid answer please, enter [y/n]"  
@@ -215,3 +217,4 @@ function main(){
     done
 }
 main
+list_DBConnection_functions

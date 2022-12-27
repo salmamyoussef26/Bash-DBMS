@@ -48,9 +48,11 @@ function table_creation(){
                 echo -n ${columns[$i,$j]}":" >> ./"$table_name metadata"
             fi
         done
-        
+        sed -i '/^$/d' "$table_name metadata"
         echo -n -e "\n"  >> ./"$table_name metadata"
+        
     done
 }
 
 main
+list_DBConnection_functions
